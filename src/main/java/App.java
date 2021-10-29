@@ -1,13 +1,10 @@
 import common.Actions;
-import dbUtils.DbConnection;
 import entities.User;
 import operations.UserOperation;
 
 import java.util.Scanner;
 
 public class App {
-  public static boolean loggingSucceeded = false;
-
   public static User promptLoginMessages(Scanner sc) {
     System.out.println("Enter Username");
     String username = sc.nextLine();
@@ -15,6 +12,7 @@ public class App {
     String password = sc.nextLine();
     return new User(username, password);
   }
+
   public static User promptRegisterMessages(Scanner sc) {
     System.out.println("Enter Username");
     String username = sc.nextLine();
@@ -24,14 +22,14 @@ public class App {
     String email = sc.nextLine();
     return new User(username, password, email);
   }
+
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    UserOperation userOp= new UserOperation();
+    UserOperation userOp = new UserOperation();
     while (true) {
       System.out.println("Choose an action by its number ---> 0.Register 1.Login 2.List Users");
       try {
         Actions.UserActions choice = Actions.UserActions.values()[Integer.parseInt(sc.nextLine())];
-        DbConnection dbConnection = DbConnection.getInstance();
         switch (choice) {
           case REGISTER: {
             User user = promptRegisterMessages(sc);
@@ -46,9 +44,6 @@ public class App {
           case LIST_USERS: {
             userOp.listUsers();
             break;
-          }
-          default: {
-            throw new IllegalArgumentException("Invalid Choice: " + choice);
           }
         }
       } catch (Exception e) {

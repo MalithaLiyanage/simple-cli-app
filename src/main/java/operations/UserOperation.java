@@ -19,6 +19,7 @@ public class UserOperation {
     userRepository.writeUser(encryptedUser);
   }
   public void login(User user) {
+    loggedInUser = null;
     User resultUser = userRepository.readUser(user.getUsername());
     if (resultUser != null && PasswordHelper.verifyPassword(user.getPassword(), resultUser.getPassword())) {
       System.out.println("Logging Successful");
