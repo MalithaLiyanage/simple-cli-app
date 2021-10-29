@@ -17,7 +17,6 @@ public class UserRepository {
           ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM user where username='%s' AND password='%s';", username, password));) {
       if (rs.next()) {
         User result = new User(rs.getString(1), rs.getString(2));
-        conn.close();
         return result;
       }
     }catch (SQLException e) {
