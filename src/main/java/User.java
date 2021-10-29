@@ -9,58 +9,44 @@ public class User extends DbConnection {
     this.password = password;
   }
 
+  public String getUsername() {
+    return username;
+  }
+  public String getPassword() {
+    return password;
+  }
+
   public void register(DbConnection dbConnection) {
-    Connection conn = dbConnection.initConnection();
-    try (Statement stmt = conn.createStatement();) {
-      String updateQuery = String.format("INSERT INTO user VALUES ('%s', '%s');", this.username, this.password);
-      stmt.executeUpdate(String.format(updateQuery));
-    } catch (Exception e) {
+    try {
+      UserRepository userRepo = new UserRepository();
+      userRepo.writeUser(dbConnection, this);
+    } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
   }
 
   public void login(DbConnection dbConnection) {
-    Connection conn = dbConnection.initConnection();
-    try (Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM user where username='%s' AND password='%s';", this.username, this.password));) {
-      if (rs.next()) {
+    try {
+      UserRepository userRepo = new UserRepository();
+      if (userRepo.isUserAvailable(dbConnection, this)) {
         System.out.println("Logging Successful");
         App.loggingSucceeded = true;
       } else {
         System.out.println("Wrong username or password");
         return;
       }
-    } catch (Exception e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
   }
 
   public static void listUsers(DbConnection dbConnection) {
-    Connection conn = dbConnection.initConnection();
-    try (Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("SELECT * FROM user;");) {
-      while (rs.next())
-        System.out.println(rs.getString(1) + " " + rs.getString(2));
-    } catch (Exception e) {
+    try {
+      UserRepository userRepo = new UserRepository();
+      ResultSet allUsers = UserRepository.readAllUsers(dbConnection);
+      Display.displayAllUsers(allUsers);
+    } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
   }
 }
