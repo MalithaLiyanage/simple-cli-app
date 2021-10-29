@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class User extends DbConnection {
   private String username;
@@ -17,33 +18,24 @@ public class User extends DbConnection {
   }
 
   public void register(DbConnection dbConnection) {
-    try {
-      UserRepository userRepo = new UserRepository();
-      userRepo.writeUser(dbConnection, this);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    UserRepository userRepo = new UserRepository();
+    userRepo.writeUser(dbConnection, this);
   }
 
   public void login(DbConnection dbConnection) {
-    try {
-      UserRepository userRepo = new UserRepository();
-      if (userRepo.isUserAvailable(dbConnection, this)) {
-        System.out.println("Logging Successful");
-        App.loggingSucceeded = true;
-      } else {
-        System.out.println("Wrong username or password");
-        return;
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    UserRepository userRepo = new UserRepository();
+    if (userRepo.isUserAvailable(dbConnection, this)) {
+      System.out.println("Logging Successful");
+      App.loggingSucceeded = true;
+    } else {
+      System.out.println("Wrong username or password");
+      return;
     }
   }
 
   public static void listUsers(DbConnection dbConnection) {
     try {
-      UserRepository userRepo = new UserRepository();
-      ResultSet allUsers = UserRepository.readAllUsers(dbConnection);
+      ArrayList allUsers = UserRepository.readAllUsers(dbConnection);
       Display.displayAllUsers(allUsers);
     } catch (SQLException e) {
       e.printStackTrace();

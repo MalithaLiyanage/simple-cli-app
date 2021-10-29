@@ -1,10 +1,10 @@
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class Display {
-  public static void displayAllUsers (ResultSet rs) throws SQLException {
-    while (rs.next()) {
-      System.out.println(rs.getString(1) +" "+rs.getString(2));
+  public static void displayAllUsers (ArrayList<User> allUsers) throws SQLException {
+    for (User user: allUsers) {
+      System.out.println(user.getUsername() +" "+user.getPassword());
     }
   }
 }
