@@ -17,6 +17,7 @@ public class UserRepository {
 
     if (rs.next()) {
       User result = new User(rs.getString(1), rs.getString(2));
+      conn.close();
       return result;
     }
     return null;
@@ -30,6 +31,7 @@ public class UserRepository {
     Connection conn = dbConnection.initConnection();
     Statement stmt = conn.createStatement();
     String readQuery = String.format("SELECT * FROM user;");
+    conn.close();
     return stmt.executeQuery(readQuery);
   }
 }
